@@ -13,9 +13,11 @@ but WITHOUT ANY WARRANTY.
 #include "Dependencies\glew.h"
 #include "Dependencies\freeglut.h"
 
+#include "GameObject.h"
 #include "Renderer.h"
 
 Renderer *g_Renderer = NULL;
+GameObject *g_Object = NULL;
 
 void RenderScene(void)
 {
@@ -24,7 +26,8 @@ void RenderScene(void)
 
 	// Renderer Test
 	g_Renderer->DrawSolidRect(0, 0, 0, 4, 1, 0, 1, 1);
-
+	float* temp = g_Object->getColor();
+	g_Renderer->DrawSolidRect(g_Object->getX(), g_Object->getY(), g_Object->getZ(), g_Object->getSize(), temp[0], temp[1], temp[2], temp[3]);
 	glutSwapBuffers();
 }
 
@@ -73,6 +76,8 @@ int main(int argc, char **argv)
 	{
 		std::cout << "Renderer could not be initialized.. \n";
 	}
+
+	g_Object = new GameObject(-250.0, 0.0, 0.0, 50.0);
 
 	glutDisplayFunc(RenderScene);
 	glutIdleFunc(Idle);

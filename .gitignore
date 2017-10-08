@@ -4,4 +4,6 @@
 *.pch
 *.idb
 *.tlog
-
+*.idb
+*.log
+.vs/
