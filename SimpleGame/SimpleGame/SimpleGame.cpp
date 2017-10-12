@@ -38,6 +38,9 @@ void Idle(void)
 
 void MouseInput(int button, int state, int x, int y)
 {
+	if (g_Object != nullptr)
+		delete g_Object;
+	g_Object = new GameObject(x, y, 0, 50);
 	RenderScene();
 }
 
