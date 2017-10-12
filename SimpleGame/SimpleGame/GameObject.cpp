@@ -18,3 +18,13 @@ void GameObject::setColor(float * fcolor)
 		color[i] = fcolor[i];
 	}
 }
+
+void GameObject::update(float time)
+{
+	PositionX = PositionX += xVector*time;
+	if (PositionX > 250 || PositionX < 250)
+		xVector = -xVector;
+	PositionY = PositionY += yVector*time;
+	if (PositionY > 250 || PositionY < 250)
+		yVector = -yVector;
+}

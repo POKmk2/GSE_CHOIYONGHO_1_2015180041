@@ -3,36 +3,41 @@
 #include "stdafx.h"
 class GameObject
 {
-	float x;
-	float y;
-	float z;
+	float PositionX;
+	float PositionY;
+	float PositionZ;
 	float size;
 	float color[4];
+	float xVector;
+	float yVector;
 public:
 	GameObject(float fx, float fy, float fz, float fsize)
 	{
-		x = fx;
-		y = fy;
-		z = fz;
+		PositionX = fx;
+		PositionY = fy;
+		PositionZ = fz;
 		size = fsize;
 		for (int i = 0; i < 4; ++i)
 			color[i] = (rand() % 255) / 255.0;
+		xVector = (rand() % 100) / 10.0;
+		yVector = (rand() % 100) / 10.0;
 	}
 	virtual ~GameObject();
 	void Render();
 
-	float getX() { return x; }
-	float getY() { return y; }
-	float getZ() { return z; }
+	float getX() { return PositionX; }
+	float getY() { return PositionY; }
+	float getZ() { return PositionZ; }
 	float getSize() { return size; }
 	float* getColor() { return color; }
 
-	void setX(float fx) { x = fx; }
-	void setY(float fy) { y = fy; }
-	void setZ(float fz) { z = fz; }
+	void setX(float fx) { PositionX = fx; }
+	void setY(float fy) { PositionY = fy; }
+	void setZ(float fz) { PositionZ = fz; }
 	void setSize(float fsize) { size = fsize; }
 	void setColor(float* fcolor);
 
 	void draw();
+	void update(float time);
 };
 
