@@ -13,7 +13,7 @@ GameObject::GameObject(float fx, float fy, float fz, int ty, int te)
 	case OBJECT_CHARACTER:
 		size = 8;
 		life = 10;
-		lifetime = 50;
+		lifetime = 500;
 		speed = 300.0f;
 		while (xVector*yVector == 0)
 		{
@@ -27,7 +27,7 @@ GameObject::GameObject(float fx, float fy, float fz, int ty, int te)
 		color[3] = 1.0f;
 		break;
 	case OBJECT_BUILDING:
-		size = 25;
+		size = 50;
 		life = 250;
 		lifetime = 1000;
 		speed = 0;
@@ -39,9 +39,9 @@ GameObject::GameObject(float fx, float fy, float fz, int ty, int te)
 		color[3] = 1.0f;
 		break;
 	case OBJECT_BULLET:
-		life = 20;
-		lifetime = 10;
-		speed = 300;
+		life = 10;
+		lifetime = 100;
+		speed = 600.0f;
 		size = 4;
 		while (xVector*yVector == 0)
 		{
@@ -56,8 +56,9 @@ GameObject::GameObject(float fx, float fy, float fz, int ty, int te)
 		break;
 	case OBJECT_ARROW:
 		size = 2;
-		speed = 100;
+		speed = 100.0f;
 		life = 10;
+		lifetime = 100;
 		while (xVector*yVector == 0)
 		{
 			xVector = rand() % 10 - 5;

@@ -11,13 +11,15 @@ class SceneMgr
 	int team2ArraySize = 0;
 	GameObject* BulletArray[MAX_BULLET_COUNT];
 	int BulletArraySize = 0;
-	GameObject* ArrowArray[MAX_CHARACTER_COUNT][MAX_ARROW_COUNT];
-	int ArrowArraySize[MAX_CHARACTER_COUNT] = { 0, };
+	GameObject* ArrowArray[2][MAX_ARROW_COUNT];
+	int ArrowArraySize[2] = { 0, };
 	float ArrowArrayTime[MAX_CHARACTER_COUNT] = { 0, };
 	float bulletTime[MAX_BUILDING_COUNT] = { 0, };
 	Renderer *g_Renderer = NULL;
 	int BuildingID1;
 	int BuildingID2;
+	float spawnTime;
+	float delay = 0;
 public:
 	SceneMgr();
 	~SceneMgr();
@@ -34,5 +36,7 @@ public:
 	void update(float time);
 	void collisionCheck();
 	void Render();
+	float getDelay();
+	void setDelay(float f) { delay = f; }
 };
 

@@ -21,7 +21,9 @@ but WITHOUT ANY WARRANTY.
 SceneMgr *g_SceneMgr = NULL;
 std::chrono::system_clock::time_point start;
 std::chrono::duration<float> sec;
-int team = 0;
+std::chrono::system_clock::time_point spawnTime;
+
+
 void RenderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -34,6 +36,7 @@ void RenderScene(void)
 		g_SceneMgr->update(sec.count());
 		start = std::chrono::system_clock::now();
 	}
+	
 	glutSwapBuffers();
 }
 
@@ -52,19 +55,12 @@ void MouseInput(int button, int state, int x, int y)
 	if (button == GLUT_LEFT_BUTTON&& state == GLUT_UP)
 	{
 		g_LButtonDown = false;
-		g_SceneMgr->addObject(x - WIDTH / 2, -y + HEIGHT / 2, 0, OBJECT_CHARACTER, 0);
+		if ((-y + HEIGHT / 2 < 0) && (g_SceneMgr->getDelay() > 7.0))
+		{
+			g_SceneMgr->setDelay(0.0f);
+			g_SceneMgr->addObject(x - WIDTH / 2, -y + HEIGHT / 2, 0, OBJECT_CHARACTER, 1);
+		}
 	}
-
-	if (button == GLUT_RIGHT_BUTTON&& state == GLUT_DOWN)
-	{
-		g_LButtonDown = true;
-	}
-	if (button == GLUT_RIGHT_BUTTON&& state == GLUT_UP)
-	{
-		g_LButtonDown = false;
-		g_SceneMgr->addObject(x - WIDTH / 2, -y + HEIGHT / 2, 0, OBJECT_CHARACTER, 1);
-	}
-
 	RenderScene();
 }
 
@@ -98,6 +94,7 @@ int main(int argc, char **argv)
 		std::cout << "GLEW 3.0 not supported\n ";
 	}
 	start = std::chrono::system_clock::now();
+	spawnTime = std::chrono::system_clock::now();
 	// Initialize Renderer
 	g_SceneMgr = new SceneMgr;
 

@@ -17,6 +17,8 @@ SceneMgr::SceneMgr()
 	addObject(-150, -350, 0, OBJECT_BUILDING, 1);
 	addObject(150, -350, 0, OBJECT_BUILDING, 1);
 	addObject(0, -350, 0, OBJECT_BUILDING, 1);
+	spawnTime = 0;
+	delay = 0;
 }
 
 
@@ -128,7 +130,7 @@ void SceneMgr::addObject(float fx, float fy, float fz, int type, int team)
 			return;
 		}
 		CharacterArray[CharacterArraySize] = new GameObject(fx, fy, fz, type, team);
-		ArrowArraySize[CharacterArraySize] = 0;
+		ArrowArrayTime[CharacterArraySize] = 3.0f;
 		if (team == 0)
 			team1ArraySize++;
 		else
@@ -163,15 +165,18 @@ void SceneMgr::update(float time)
 	for (int i = 0; i < CharacterArraySize; ++i)
 	{
 		CharacterArray[i]->update(time);
+		ArrowArrayTime[i] += time;
+		if (ArrowArrayTime[i] > 3.0f)
+		{
+			addArrow(CharacterArray[i]->getX(), CharacterArray[i]->getY(), CharacterArray[i]->getZ(), CharacterArray[i]->getTeam(), CharacterArray[i]->getTeam());
+			ArrowArrayTime[i] -= 3.0f;
+		}
+	}
+	for (int i = 0; i < 2; ++i)
+	{
 		for (int j = 0; j < ArrowArraySize[i]; ++j)
 		{
 			ArrowArray[i][j]->update(time);
-		}
-		ArrowArrayTime[i] += time;
-		if (ArrowArrayTime[i] > 0.5f)
-		{
-			addArrow(CharacterArray[i]->getX(), CharacterArray[i]->getY(), CharacterArray[i]->getZ(), i, CharacterArray[i]->getTeam());
-			ArrowArrayTime[i] -= 0.5f;
 		}
 	}
 	for (int i = 0; i < BuildingArraySize; ++i)
@@ -180,7 +185,7 @@ void SceneMgr::update(float time)
 		if ((bulletTime[i] > 10.0) && (BuildingArraySize != 0))
 		{
 			addObject(BuildingArray[i]->getX(), BuildingArray[i]->getY(), BuildingArray[i]->getZ(), OBJECT_BULLET, BuildingArray[i]->getTeam());
-			bulletTime[i] -= 10.0f;
+			bulletTime[i] -= 10.0f;	
 		}
 	}
 	/*if (ObjectArray[i]->minusLifeTime(time)<0)
@@ -194,6 +199,13 @@ void SceneMgr::update(float time)
 		--i;
 	}*/
 	collisionCheck();
+	spawnTime += time;
+	if (spawnTime > 5.0)
+	{
+		addObject(rand() % 490 - 245, rand() % 390, 0, OBJECT_CHARACTER, 0);
+		spawnTime -= 5.0;
+	}
+	delay += time;
 }
 
 void SceneMgr::collisionCheck()
@@ -216,12 +228,18 @@ void SceneMgr::collisionCheck()
 				BulletArray[j]->SetCollision(true);
 			}
 		}
+	}
+	for (int i = 0; i < 2; ++i)
+	{
 		for (int j = 0; j < ArrowArraySize[i]; ++j)
 		{
-			if (CharacterArray[i]->collisionCheck(ArrowArray[i][j])) //자신이 쏜 화살 확인
+			for (int k = 0; k < CharacterArraySize; ++k)
 			{
-				CharacterArray[i]->lifeDown(ArrowArray[i][j]->getLife());
-				ArrowArray[i][j]->SetCollision(true);
+				if (CharacterArray[k]->collisionCheck(ArrowArray[i][j])) //자신이 쏜 화살 확인
+				{
+					CharacterArray[k]->lifeDown(ArrowArray[i][j]->getLife());
+					ArrowArray[i][j]->SetCollision(true);
+				}
 			}
 			for (int k = 0; k < BuildingArraySize; ++k)
 			{
@@ -263,11 +281,6 @@ void SceneMgr::collisionCheck()
 	{
 		if (CharacterArray[i]->GetCollision() == true)
 		{
-			for (int j = 0; j < ArrowArraySize[i]; ++j)
-			{
-				delete ArrowArray[i][j];
-			}
-			ArrowArraySize[i] = 0;
 			CharacterArraySize--;
 			if (CharacterArray[i]->getTeam() == 0)
 				team1ArraySize--;
@@ -277,22 +290,12 @@ void SceneMgr::collisionCheck()
 			for (int j = i; j < CharacterArraySize; ++j)
 			{
 				CharacterArray[j] = CharacterArray[j + 1];
-				ArrowArraySize[j] = ArrowArraySize[j + 1];
-				for (int k = 0; k < ArrowArraySize[j]; ++k)
-				{
-					ArrowArray[j][k] = ArrowArray[j + 1][k];
-				}
 			}
 			i--;
 			continue;
 		}
 		if (CharacterArray[i]->getLife() <= 0)
 		{
-			for (int j = 0; j < ArrowArraySize[i]; ++j)
-			{
-				delete ArrowArray[i][j];
-			}
-			ArrowArraySize[i] = 0;
 			CharacterArraySize--;
 			if (CharacterArray[i]->getTeam() == 0)
 				team1ArraySize--;
@@ -302,22 +305,12 @@ void SceneMgr::collisionCheck()
 			for (int j = i; j < CharacterArraySize; ++j)
 			{
 				CharacterArray[j] = CharacterArray[j + 1];
-				ArrowArraySize[j] = ArrowArraySize[j + 1];
-				for (int k = 0; k < ArrowArraySize[j]; ++k)
-				{
-					ArrowArray[j][k] = ArrowArray[j + 1][k];
-				}
 			}
 			i--;
 			continue;
 		}
 		if (CharacterArray[i]->getLifeTime() < 0)
 		{
-			for (int j = 0; j < ArrowArraySize[i]; ++j)
-			{
-				delete ArrowArray[i][j];
-			}
-			ArrowArraySize[i] = 0;
 			CharacterArraySize--;
 			if (CharacterArray[i]->getTeam() == 0)
 				team1ArraySize--;
@@ -327,15 +320,14 @@ void SceneMgr::collisionCheck()
 			for (int j = i; j < CharacterArraySize; ++j)
 			{
 				CharacterArray[j] = CharacterArray[j + 1];
-				ArrowArraySize[j] = ArrowArraySize[j + 1];
-				for (int k = 0; k < ArrowArraySize[j]; ++k)
-				{
-					ArrowArray[j][k] = ArrowArray[j + 1][k];
-				}
 			}
 			i--;
 			continue;
 		}
+		CharacterArray[i]->SetCollision(false);
+	}
+	for (int i = 0; i < 2; ++i)
+	{
 		for (int j = 0; j < ArrowArraySize[i]; ++j)
 		{
 			if (ArrowArray[i][j]->GetCollision() == true)
@@ -361,8 +353,8 @@ void SceneMgr::collisionCheck()
 				continue;
 			}
 		}
-		CharacterArray[i]->SetCollision(false);
 	}
+
 	for (int i = 0; i < BulletArraySize; ++i)
 	{
 		if (BulletArray[i]->GetCollision() == true)
@@ -423,7 +415,7 @@ void SceneMgr::Render()
 			g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 0, 0, 1, 1);
 		
 	}
-	for (int i = 0; i < CharacterArraySize; ++i)
+	for (int i = 0; i < 2; ++i)
 	{
 		for (int j = 0; j < ArrowArraySize[i]; ++j)
 		{
@@ -435,5 +427,10 @@ void SceneMgr::Render()
 				g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 1, 1, 0, 1);
 		}
 	}
+}
+
+float SceneMgr::getDelay()
+{
+	return delay;
 }
 
