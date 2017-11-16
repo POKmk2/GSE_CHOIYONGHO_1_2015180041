@@ -1,6 +1,6 @@
 #pragma once
-#include <stdlib.h>
 #include "stdafx.h"
+
 class GameObject
 {
 	float PositionX;
@@ -8,20 +8,16 @@ class GameObject
 	float PositionZ;
 	float size;
 	float color[4];
-	float xVector;
-	float yVector;
+	float xVector=0;
+	float yVector=0;
+	float speed = 0;
+	int life = 1000;
+	float lifetime = 10.0f;
+	bool collide = false;
+	int type = 0;
+	int team = 0;
 public:
-	GameObject(float fx, float fy, float fz, float fsize)
-	{
-		PositionX = fx;
-		PositionY = fy;
-		PositionZ = fz;
-		size = fsize;
-		for (int i = 0; i < 4; ++i)
-			color[i] = (rand() % 255) / 255.0;
-		xVector = (rand() % 100) / 10.0;
-		yVector = (rand() % 100) / 10.0;
-	}
+	GameObject(float fx, float fy, float fz, int type, int team=-1);
 	virtual ~GameObject();
 	void Render();
 
@@ -30,14 +26,25 @@ public:
 	float getZ() { return PositionZ; }
 	float getSize() { return size; }
 	float* getColor() { return color; }
+	int getLife() { return life; }
+	int getTeam() { return team; }
+	float getLifeTime() { return lifetime; }
 
 	void setX(float fx) { PositionX = fx; }
 	void setY(float fy) { PositionY = fy; }
 	void setZ(float fz) { PositionZ = fz; }
 	void setSize(float fsize) { size = fsize; }
 	void setColor(float* fcolor);
+	void setLife(int l) {life = l;}
+	void setLifeTime(float f) { lifetime = f; }
+	void setTeam(int t) { team = t; }
 
 	void draw();
 	void update(float time);
+	bool collisionCheck(GameObject* other);
+	int lifeDown(int i);
+	void SetCollision(bool b);
+	bool GetCollision();
+	float minusLifeTime(float t);
 };
 

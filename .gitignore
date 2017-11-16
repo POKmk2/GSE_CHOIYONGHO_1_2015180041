@@ -6,4 +6,5 @@
 *.tlog
 *.idb
 *.log
-.vs/
+.vs/*
+

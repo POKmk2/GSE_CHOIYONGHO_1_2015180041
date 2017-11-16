@@ -1,6 +1,75 @@
 #include "stdafx.h"
 #include "GameObject.h"
 
+GameObject::GameObject(float fx, float fy, float fz, int ty, int te)
+{
+	PositionX = fx;
+	PositionY = fy;
+	PositionZ = fz;
+	type = ty;
+	team = te;
+	switch (type)
+	{
+	case OBJECT_CHARACTER:
+		size = 8;
+		life = 10;
+		lifetime = 50;
+		speed = 300.0f;
+		while (xVector*yVector == 0)
+		{
+			xVector = rand() % 10 - 5;
+			yVector = rand() % 10 - 5;
+		}
+		Normalize(xVector, yVector);
+		color[0] = 1.0f;
+		color[1] = 1.0f;
+		color[2] = 1.0f;
+		color[3] = 1.0f;
+		break;
+	case OBJECT_BUILDING:
+		size = 25;
+		life = 250;
+		lifetime = 1000;
+		speed = 0;
+		xVector = 0;
+		yVector = 0;
+		color[0] = 1.0f;
+		color[1] = 1.0f;
+		color[2] = 0.0f;
+		color[3] = 1.0f;
+		break;
+	case OBJECT_BULLET:
+		life = 20;
+		lifetime = 10;
+		speed = 300;
+		size = 4;
+		while (xVector*yVector == 0)
+		{
+			xVector = rand() % 10 - 5;
+			yVector = rand() % 10 - 5;
+		}
+		Normalize(xVector, yVector);
+		color[0] = 1.0f;
+		color[1] = 0.0f;
+		color[2] = 0.0f;
+		color[3] = 1.0f;
+		break;
+	case OBJECT_ARROW:
+		size = 2;
+		speed = 100;
+		life = 10;
+		while (xVector*yVector == 0)
+		{
+			xVector = rand() % 10 - 5;
+			yVector = rand() % 10 - 5;
+		}
+		Normalize(xVector, yVector);
+		color[0] = 0.0f;
+		color[1] = 1.0f;
+		color[2] = 0.0f;
+		color[3] = 1.0f;
+	}
+}
 
 GameObject::~GameObject()
 {
@@ -19,12 +88,65 @@ void GameObject::setColor(float * fcolor)
 	}
 }
 
-void GameObject::update(float time)
+void GameObject::update(float time)//버그 수정
 {
-	PositionX = PositionX += xVector*time;
-	if (PositionX > 250 || PositionX < 250)
+	if (PositionX > WIDTH / 2 - 5 - size / 2)
+	{
 		xVector = -xVector;
-	PositionY = PositionY += yVector*time;
-	if (PositionY > 250 || PositionY < 250)
+		PositionX = WIDTH / 2 - 10;
+	}
+	if (PositionX < -(WIDTH / 2) + 5 + size / 2)
+	{
+		xVector = -xVector;
+		PositionX = -WIDTH / 2 + 10;
+	}
+	PositionX += xVector*time*speed;
+	if (PositionY > HEIGHT / 2 - 5 - size / 2)
+	{
+		PositionY = HEIGHT / 2 - 10;
 		yVector = -yVector;
+	}
+	if (PositionY < -(HEIGHT / 2) + 5 + size / 2)
+	{
+		PositionY = -HEIGHT / 2 + 10;
+		yVector = -yVector;
+	}
+	PositionY += yVector*time*speed;
+	minusLifeTime(time);
+}
+
+bool GameObject::collisionCheck(GameObject * other)
+{
+	if (team == other->getTeam())
+		return false;
+	if (((PositionX + size / 2) > (other->PositionX - other->size / 2))
+		&& ((PositionX - size / 2) < (other->PositionX + other->size / 2))
+		&& ((PositionY - size / 2) < (other->PositionY + other->size / 2))
+		&& ((PositionY + size / 2) > (other->PositionY - other->size / 2))
+		)
+	{
+		return true;
+	}
+	return false;
+}
+
+int GameObject::lifeDown(int i)
+{
+	life -= i;
+	return life;
+}
+
+void GameObject::SetCollision(bool b)
+{
+	collide = b;
+}
+
+bool GameObject::GetCollision()
+{
+	return collide;
+}
+
+float GameObject::minusLifeTime(float t)
+{
+	return lifetime -= t;
 }
