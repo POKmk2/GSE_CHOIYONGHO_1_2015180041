@@ -25,6 +25,7 @@ GameObject::GameObject(float fx, float fy, float fz, int ty, int te)
 		color[1] = 1.0f;
 		color[2] = 1.0f;
 		color[3] = 1.0f;
+		level = 0.2;
 		break;
 	case OBJECT_BUILDING:
 		size = 50;
@@ -37,9 +38,10 @@ GameObject::GameObject(float fx, float fy, float fz, int ty, int te)
 		color[1] = 1.0f;
 		color[2] = 0.0f;
 		color[3] = 1.0f;
+		level = 0.1;
 		break;
 	case OBJECT_BULLET:
-		life = 10;
+		life = 20;
 		lifetime = 100;
 		speed = 600.0f;
 		size = 4;
@@ -53,6 +55,7 @@ GameObject::GameObject(float fx, float fy, float fz, int ty, int te)
 		color[1] = 0.0f;
 		color[2] = 0.0f;
 		color[3] = 1.0f;
+		level = 0.3;
 		break;
 	case OBJECT_ARROW:
 		size = 2;
@@ -69,6 +72,7 @@ GameObject::GameObject(float fx, float fy, float fz, int ty, int te)
 		color[1] = 1.0f;
 		color[2] = 0.0f;
 		color[3] = 1.0f;
+		level = 0.3;
 	}
 }
 

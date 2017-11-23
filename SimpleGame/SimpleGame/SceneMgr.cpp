@@ -18,7 +18,7 @@ SceneMgr::SceneMgr()
 	addObject(150, -350, 0, OBJECT_BUILDING, 1);
 	addObject(0, -350, 0, OBJECT_BUILDING, 1);
 	spawnTime = 0;
-	delay = 0;
+	delay = 7;
 }
 
 
@@ -214,7 +214,7 @@ void SceneMgr::collisionCheck()
 	{
 		for (int j = 0; j < BuildingArraySize; ++j)
 		{
-			if (CharacterArray[i]->collisionCheck(BuildingArray[j]))
+			if (CharacterArray[i]->collisionCheck(BuildingArray[j]))//캐릭터-빌딩 충돌체크
 			{
 				CharacterArray[i]->SetCollision(true);
 				BuildingArray[j]->lifeDown(CharacterArray[i]->getLife());
@@ -222,7 +222,7 @@ void SceneMgr::collisionCheck()
 		}
 		for (int j = 0; j < BulletArraySize; ++j)
 		{
-			if (CharacterArray[i]->collisionCheck(BulletArray[j]))
+			if (CharacterArray[i]->collisionCheck(BulletArray[j]))//캐릭터-불렛 충돌체크
 			{
 				CharacterArray[i]->lifeDown(BulletArray[j]->getLife());
 				BulletArray[j]->SetCollision(true);
@@ -233,7 +233,7 @@ void SceneMgr::collisionCheck()
 	{
 		for (int j = 0; j < ArrowArraySize[i]; ++j)
 		{
-			for (int k = 0; k < CharacterArraySize; ++k)
+			for (int k = 0; k < CharacterArraySize; ++k)//캐릭터-화살 충돌체크
 			{
 				if (CharacterArray[k]->collisionCheck(ArrowArray[i][j])) //자신이 쏜 화살 확인
 				{
@@ -243,7 +243,7 @@ void SceneMgr::collisionCheck()
 			}
 			for (int k = 0; k < BuildingArraySize; ++k)
 			{
-				if (ArrowArray[i][j]->collisionCheck(BuildingArray[k]))
+				if (ArrowArray[i][j]->collisionCheck(BuildingArray[k]))//빌딩-화살 충돌체크
 				{
 					BuildingArray[k]->lifeDown(ArrowArray[i][j]->getLife());
 					ArrowArray[i][j]->SetCollision(true);
@@ -251,6 +251,18 @@ void SceneMgr::collisionCheck()
 			}
 		}
 	}
+	for (int i = 0; i < BulletArraySize; ++i)
+	{
+		for (int j = 0; j < BuildingArraySize; ++j)
+		{
+			if (BulletArray[i]->collisionCheck(BuildingArray[j]))
+			{
+				BuildingArray[j]->lifeDown(BulletArray[i]->getLife());
+				BulletArray[i]->SetCollision(true);
+			}
+		}
+	}
+
 	for (int i = 0; i < BuildingArraySize; ++i)
 	{
 		if (BuildingArray[i]->getLife() <= 0)
@@ -264,7 +276,7 @@ void SceneMgr::collisionCheck()
 			i--;
 			continue;
 		}
-		if (BuildingArray[i]->getLifeTime() < 0)
+		/*if (BuildingArray[i]->getLifeTime() < 0)
 		{
 			delete BuildingArray[i];
 			BuildingArraySize--;
@@ -274,7 +286,7 @@ void SceneMgr::collisionCheck()
 			}
 			i--;
 			continue;
-		}
+		}*/
 		BuildingArray[i]->SetCollision(false);
 	}
 	for (int i = 0; i < CharacterArraySize; ++i)
@@ -309,7 +321,7 @@ void SceneMgr::collisionCheck()
 			i--;
 			continue;
 		}
-		if (CharacterArray[i]->getLifeTime() < 0)
+		/*if (CharacterArray[i]->getLifeTime() < 0)
 		{
 			CharacterArraySize--;
 			if (CharacterArray[i]->getTeam() == 0)
@@ -323,7 +335,7 @@ void SceneMgr::collisionCheck()
 			}
 			i--;
 			continue;
-		}
+		}*/
 		CharacterArray[i]->SetCollision(false);
 	}
 	for (int i = 0; i < 2; ++i)
@@ -341,7 +353,7 @@ void SceneMgr::collisionCheck()
 				j--;
 				continue;
 			}
-			if (ArrowArray[i][j]->getLifeTime() < 0)
+			/*if (ArrowArray[i][j]->getLifeTime() < 0)
 			{
 				delete ArrowArray[i][j];
 				ArrowArraySize[i]--;
@@ -351,7 +363,7 @@ void SceneMgr::collisionCheck()
 				}
 				j--;
 				continue;
-			}
+			}*/
 		}
 	}
 
@@ -368,7 +380,7 @@ void SceneMgr::collisionCheck()
 			i--;
 			continue;
 		}
-		if (BulletArray[i]->getLifeTime() < 0)
+		/*if (BulletArray[i]->getLifeTime() < 0)
 		{
 			delete BulletArray[i];
 			BulletArraySize--;
@@ -378,7 +390,7 @@ void SceneMgr::collisionCheck()
 			}
 			i--;
 			continue;
-		}
+		}*/
 		BulletArray[i]->SetCollision(false);
 	}
 }
@@ -392,27 +404,40 @@ void SceneMgr::Render()
 		g = BuildingArray[i];
 		//fColor = g->getColor();
 		if (g->getTeam() == 0)
-			g_Renderer->DrawTexturedRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 0, 0, 0, 0, BuildingID1);
+		{
+			g_Renderer->DrawTexturedRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 1, 1, 1, 1, BuildingID1, g->getLevel());
+			g_Renderer->DrawSolidRectGauge(g->getX(), g->getY()+g->getSize()/2+5, g->getZ(), g->getSize(), 5, 1, 0, 0, 1, (float)g->getLife()/250, g->getLevel());
+		}
+
 		else
-			g_Renderer->DrawTexturedRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 0, 0, 0, 0,  BuildingID2);
+		{
+			g_Renderer->DrawTexturedRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 1, 1, 1, 1, BuildingID2, g->getLevel());
+			g_Renderer->DrawSolidRectGauge(g->getX(), g->getY() + g->getSize() / 2 + 5, g->getZ(), g->getSize(), 5, 0, 0, 1, 1, (float)g->getLife() / 250, g->getLevel());
+		}
 	}
 	for (int i = 0; i < BulletArraySize; ++i)
 	{
 		g = BulletArray[i];
 		//fColor = g->getColor();
 		if (g->getTeam() == 0)
-			g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 1, 0, 0, 1);
+			g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 1, 0, 0, 1, g->getLevel());
 		else
-			g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 0, 0, 1, 1);
+			g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 0, 0, 1, 1, g->getLevel());
 	}
 	for (int i = 0; i < CharacterArraySize; ++i)
 	{
 		g = CharacterArray[i];
 		//fColor = g->getColor();
 		if (g->getTeam() == 0)
-			g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 1, 0, 0, 1);
+		{
+			g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 1, 0, 0, 1, g->getLevel());
+			g_Renderer->DrawSolidRectGauge(g->getX(), g->getY() + g->getSize() / 2 + 5, g->getZ(), g->getSize(), 2, 1, 0, 0, 1, (float)g->getLife() / 250, g->getLevel());
+		}
 		else
-			g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 0, 0, 1, 1);
+		{
+			g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 0, 0, 1, 1, g->getLevel());
+			g_Renderer->DrawSolidRectGauge(g->getX(), g->getY() + g->getSize() / 2 + 5, g->getZ(), g->getSize(), 2, 0, 0, 1, 1, (float)g->getLife() / 250, g->getLevel());
+		}
 		
 	}
 	for (int i = 0; i < 2; ++i)
@@ -422,9 +447,9 @@ void SceneMgr::Render()
 			g = ArrowArray[i][j];
 			//fColor = g->getColor();
 			if (g->getTeam() == 0)
-				g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 0.5, 0.2, 0.7, 1);
+				g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 0.5, 0.2, 0.7, 1, g->getLevel());
 			else
-				g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 1, 1, 0, 1);
+				g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 1, 1, 0, 1, g->getLevel());
 		}
 	}
 }

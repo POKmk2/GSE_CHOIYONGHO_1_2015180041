@@ -16,6 +16,7 @@ class GameObject
 	bool collide = false;
 	int type = 0;
 	int team = 0;
+	float level = 1;
 public:
 	GameObject(float fx, float fy, float fz, int type, int team=-1);
 	virtual ~GameObject();
@@ -29,6 +30,7 @@ public:
 	int getLife() { return life; }
 	int getTeam() { return team; }
 	float getLifeTime() { return lifetime; }
+	float getLevel() { return level; }
 
 	void setX(float fx) { PositionX = fx; }
 	void setY(float fy) { PositionY = fy; }
