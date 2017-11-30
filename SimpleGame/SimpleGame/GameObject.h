@@ -31,6 +31,8 @@ public:
 	int getTeam() { return team; }
 	float getLifeTime() { return lifetime; }
 	float getLevel() { return level; }
+	float getVectorX() { return xVector; }
+	float getVectorY() { return yVector; }
 
 	void setX(float fx) { PositionX = fx; }
 	void setY(float fy) { PositionY = fy; }

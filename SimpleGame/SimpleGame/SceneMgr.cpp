@@ -11,6 +11,12 @@ SceneMgr::SceneMgr()
 	}
 	BuildingID1 = g_Renderer->CreatePngTexture("./resource/image/buildingtexture.png");
 	BuildingID2 = g_Renderer->CreatePngTexture("./resource/image/buildingtexture2.png");
+	//배경 로드하기
+	//텍스쳐 에니메이션 로드하기
+	AnimationID1 = g_Renderer->CreatePngTexture("./resource/image/attack1.png");
+	AnimationID2 = g_Renderer->CreatePngTexture("./resource/image/attack2.png");
+	particleID1 = g_Renderer->CreatePngTexture("./resource/image/particle1.png");
+	//particleID2 = g_Renderer->CreatePngTexture("./resource/image/particle2.png");
 	addObject(-150, 350, 0, OBJECT_BUILDING,0);
 	addObject(150, 350, 0, OBJECT_BUILDING, 0);
 	addObject(0, 350, 0, OBJECT_BUILDING, 0);
@@ -111,6 +117,7 @@ void SceneMgr::addObject(float fx, float fy, float fz, int type, int team)
 			return;
 		}
 		BulletArray[BulletArraySize] = new GameObject(fx, fy, fz, type, team);
+		particleTime[BulletArraySize] = 0;
 		BulletArraySize++;
 		break;
 	case OBJECT_CHARACTER:
@@ -131,6 +138,7 @@ void SceneMgr::addObject(float fx, float fy, float fz, int type, int team)
 		}
 		CharacterArray[CharacterArraySize] = new GameObject(fx, fy, fz, type, team);
 		ArrowArrayTime[CharacterArraySize] = 3.0f;
+		particleTime[CharacterArraySize] = 0.0f;
 		if (team == 0)
 			team1ArraySize++;
 		else
@@ -161,6 +169,7 @@ void SceneMgr::update(float time)
 	for (int i = 0; i < BulletArraySize; ++i)
 	{
 		BulletArray[i]->update(time);
+		particleTime[i] += time;
 	}
 	for (int i = 0; i < CharacterArraySize; ++i)
 	{
@@ -171,6 +180,7 @@ void SceneMgr::update(float time)
 			addArrow(CharacterArray[i]->getX(), CharacterArray[i]->getY(), CharacterArray[i]->getZ(), CharacterArray[i]->getTeam(), CharacterArray[i]->getTeam());
 			ArrowArrayTime[i] -= 3.0f;
 		}
+		AnimationTimer[i] += time*10;
 	}
 	for (int i = 0; i < 2; ++i)
 	{
@@ -302,6 +312,7 @@ void SceneMgr::collisionCheck()
 			for (int j = i; j < CharacterArraySize; ++j)
 			{
 				CharacterArray[j] = CharacterArray[j + 1];
+				AnimationTimer[j] = AnimationTimer[j + 1];
 			}
 			i--;
 			continue;
@@ -376,6 +387,7 @@ void SceneMgr::collisionCheck()
 			for (int j = i; j < BulletArraySize; ++j)
 			{
 				BulletArray[j] = BulletArray[j + 1];
+				particleTime[j] = particleTime[j + 1];
 			}
 			i--;
 			continue;
@@ -415,14 +427,44 @@ void SceneMgr::Render()
 			g_Renderer->DrawSolidRectGauge(g->getX(), g->getY() + g->getSize() / 2 + 5, g->getZ(), g->getSize(), 5, 0, 0, 1, 1, (float)g->getLife() / 250, g->getLevel());
 		}
 	}
+	int dirX, dirY;
 	for (int i = 0; i < BulletArraySize; ++i)
 	{
 		g = BulletArray[i];
 		//fColor = g->getColor();
 		if (g->getTeam() == 0)
-			g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 1, 0, 0, 1, g->getLevel());
+			//g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 1, 0, 0, 1, g->getLevel());
+		{
+			if (g->getVectorX() > 0.3)
+				dirX = -1;
+			else if (g->getVectorX() < -0.3)
+				dirX = 1;
+			else
+				dirX = 0;
+			if (g->getVectorY() > 0.3)
+				dirY = -1;
+			else if (g->getVectorY() < -0.3)
+				dirY = 1;
+			else
+				dirY = 0;
+			g_Renderer->DrawParticle(g->getX(), g->getY(), g->getZ(), g->getSize(), 1, 0, 0, 1, dirX, dirY, particleID1, particleTime[i]);
+		}
 		else
-			g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 0, 0, 1, 1, g->getLevel());
+		{
+			if (g->getVectorX() > 0.3)
+				dirX = -1;
+			else if (g->getVectorX() < -0.3)
+				dirX = 1;
+			else
+				dirX = 0;
+			if (g->getVectorY() > 0.3)
+				dirY = -1;
+			else if (g->getVectorY() < -0.3)
+				dirY = 1;
+			else
+				dirY = 0;
+			g_Renderer->DrawParticle(g->getX(), g->getY(), g->getZ(), g->getSize(), 0, 0, 1, 1, dirX, dirY, particleID1, particleTime[i]);
+		}
 	}
 	for (int i = 0; i < CharacterArraySize; ++i)
 	{
@@ -430,12 +472,14 @@ void SceneMgr::Render()
 		//fColor = g->getColor();
 		if (g->getTeam() == 0)
 		{
-			g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 1, 0, 0, 1, g->getLevel());
+			//g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 1, 0, 0, 1, g->getLevel());
+			g_Renderer->DrawTexturedRectSeq(g->getX(), g->getY(), g->getZ(), g->getSize()*8, 1, 0, 0, 1, AnimationID1, ((int)AnimationTimer[i])%9, 0, 9, 1, g->getLevel());
 			g_Renderer->DrawSolidRectGauge(g->getX(), g->getY() + g->getSize() / 2 + 5, g->getZ(), g->getSize(), 2, 1, 0, 0, 1, (float)g->getLife() / 250, g->getLevel());
 		}
 		else
 		{
-			g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 0, 0, 1, 1, g->getLevel());
+			//g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 0, 0, 1, 1, g->getLevel());
+			g_Renderer->DrawTexturedRectSeq(g->getX(), g->getY(), g->getZ(), g->getSize() * 8, 1, 0, 0, 1, AnimationID2, ((int)AnimationTimer[i]) % 9, 0, 9, 1, g->getLevel());
 			g_Renderer->DrawSolidRectGauge(g->getX(), g->getY() + g->getSize() / 2 + 5, g->getZ(), g->getSize(), 2, 0, 0, 1, 1, (float)g->getLife() / 250, g->getLevel());
 		}
 		

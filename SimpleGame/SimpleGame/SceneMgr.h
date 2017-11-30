@@ -10,6 +10,7 @@ class SceneMgr
 	int team1ArraySize = 0;
 	int team2ArraySize = 0;
 	GameObject* BulletArray[MAX_BULLET_COUNT];
+	float particleTime[MAX_BULLET_COUNT] = { 0, };
 	int BulletArraySize = 0;
 	GameObject* ArrowArray[2][MAX_ARROW_COUNT];
 	int ArrowArraySize[2] = { 0, };
@@ -18,6 +19,11 @@ class SceneMgr
 	Renderer *g_Renderer = NULL;
 	int BuildingID1;
 	int BuildingID2;
+	int AnimationID1;
+	float AnimationTimer[MAX_CHARACTER_COUNT];
+	int AnimationID2;
+	int particleID1;
+	int particleID2;
 	float spawnTime;
 	float delay = 0;
 public:

@@ -11,7 +11,7 @@ GameObject::GameObject(float fx, float fy, float fz, int ty, int te)
 	switch (type)
 	{
 	case OBJECT_CHARACTER:
-		size = 8;
+		size = 20;
 		life = 10;
 		lifetime = 500;
 		speed = 300.0f;
@@ -98,22 +98,22 @@ void GameObject::update(float time)//버그 수정
 	if (PositionX > WIDTH / 2 - 5 - size / 2)
 	{
 		xVector = -xVector;
-		PositionX = WIDTH / 2 - 10;
+		PositionX = WIDTH / 2 - size/2-5;
 	}
 	if (PositionX < -(WIDTH / 2) + 5 + size / 2)
 	{
 		xVector = -xVector;
-		PositionX = -WIDTH / 2 + 10;
+		PositionX = -WIDTH / 2 + size / 2+5;
 	}
 	PositionX += xVector*time*speed;
 	if (PositionY > HEIGHT / 2 - 5 - size / 2)
 	{
-		PositionY = HEIGHT / 2 - 10;
+		PositionY = HEIGHT / 2 - size / 2-5;
 		yVector = -yVector;
 	}
 	if (PositionY < -(HEIGHT / 2) + 5 + size / 2)
 	{
-		PositionY = -HEIGHT / 2 + 10;
+		PositionY = -HEIGHT / 2 + size / 2+5;
 		yVector = -yVector;
 	}
 	PositionY += yVector*time*speed;

@@ -1,6 +1,8 @@
 ﻿  SceneMgr.cpp
-c:\users\test\documents\github\gse_choiyongho_1_2015180041\simplegame\simplegame\scenemgr.cpp(205): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\test\documents\github\gse_choiyongho_1_2015180041\simplegame\simplegame\scenemgr.cpp(450): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
-c:\users\test\documents\github\gse_choiyongho_1_2015180041\simplegame\simplegame\scenemgr.cpp(401): warning C4101: 'fColor' :참조되지 않은 지역 변수입니다.
-  SimpleGame.vcxproj -> C:\Users\test\Documents\github\GSE_CHOIYONGHO_1_2015180041\SimpleGame\x64\Debug\SimpleGame.exe
-  SimpleGame.vcxproj -> C:\Users\test\Documents\github\GSE_CHOIYONGHO_1_2015180041\SimpleGame\x64\Debug\SimpleGame.pdb (Partial PDB)
+c:\users\user\documents\github\gse_choiyongho_1_2015180041\simplegame\simplegame\scenemgr.cpp(215): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\user\documents\github\gse_choiyongho_1_2015180041\simplegame\simplegame\scenemgr.cpp(450): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\user\documents\github\gse_choiyongho_1_2015180041\simplegame\simplegame\scenemgr.cpp(466): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\user\documents\github\gse_choiyongho_1_2015180041\simplegame\simplegame\scenemgr.cpp(494): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\user\documents\github\gse_choiyongho_1_2015180041\simplegame\simplegame\scenemgr.cpp(413): warning C4101: 'fColor' :참조되지 않은 지역 변수입니다.
+  SimpleGame.vcxproj -> C:\Users\user\Documents\GitHub\GSE_CHOIYONGHO_1_2015180041\SimpleGame\x64\Debug\SimpleGame.exe
+  SimpleGame.vcxproj -> C:\Users\user\Documents\GitHub\GSE_CHOIYONGHO_1_2015180041\SimpleGame\x64\Debug\SimpleGame.pdb (Partial PDB)
