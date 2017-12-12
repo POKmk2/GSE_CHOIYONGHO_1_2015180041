@@ -25,6 +25,10 @@ SceneMgr::SceneMgr()
 	addObject(0, -350, 0, OBJECT_BUILDING, 1);
 	spawnTime = 0;
 	delay = 7;
+	m_sound = new Sound();
+	soundBG = m_sound->CreateSound("./Dependencies/SoundSamples/MF-W-90.XM");
+	m_sound->PlaySound(soundBG, true, 0.2f);
+
 }
 
 
@@ -496,6 +500,7 @@ void SceneMgr::Render()
 				g_Renderer->DrawSolidRect(g->getX(), g->getY(), g->getZ(), g->getSize(), 1, 1, 0, 1, g->getLevel());
 		}
 	}
+	g_Renderer->DrawText(0,0, GLUT_BITMAP_HELVETICA_18,0,0,0,"abc");
 }
 
 float SceneMgr::getDelay()

@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Renderer.h"
+#include "Sound.h"
 class SceneMgr
 {
 	GameObject* BuildingArray[MAX_BUILDING_COUNT];
@@ -26,6 +27,8 @@ class SceneMgr
 	int particleID2;
 	float spawnTime;
 	float delay = 0;
+	Sound* m_sound;
+	int soundBG;
 public:
 	SceneMgr();
 	~SceneMgr();
