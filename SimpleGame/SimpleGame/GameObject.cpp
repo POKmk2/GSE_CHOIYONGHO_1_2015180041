@@ -43,8 +43,8 @@ GameObject::GameObject(float fx, float fy, float fz, int ty, int te)
 	case OBJECT_BULLET:
 		life = 20;
 		lifetime = 100;
-		speed = 600.0f;
-		size = 4;
+		speed = 200.0f;
+		size = 10;
 		while (xVector*yVector == 0)
 		{
 			xVector = rand() % 10 - 5;

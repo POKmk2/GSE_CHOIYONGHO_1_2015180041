@@ -451,7 +451,7 @@ void SceneMgr::Render()
 				dirY = 1;
 			else
 				dirY = 0;
-			g_Renderer->DrawParticle(g->getX(), g->getY(), g->getZ(), g->getSize(), 1, 0, 0, 1, dirX, dirY, particleID1, particleTime[i]);
+			g_Renderer->DrawParticle(g->getX(), g->getY(), g->getZ(), g->getSize(), 1, 0, 0, 1, dirX, dirY, particleID1, particleTime[i],0.21);
 		}
 		else
 		{
@@ -467,7 +467,7 @@ void SceneMgr::Render()
 				dirY = 1;
 			else
 				dirY = 0;
-			g_Renderer->DrawParticle(g->getX(), g->getY(), g->getZ(), g->getSize(), 0, 0, 1, 1, dirX, dirY, particleID1, particleTime[i]);
+			g_Renderer->DrawParticle(g->getX(), g->getY(), g->getZ(), g->getSize(), 0, 0, 1, 1, dirX, dirY, particleID1, particleTime[i],0.21);
 		}
 	}
 	for (int i = 0; i < CharacterArraySize; ++i)
@@ -501,6 +501,7 @@ void SceneMgr::Render()
 		}
 	}
 	g_Renderer->DrawText(0,0, GLUT_BITMAP_HELVETICA_18,0,0,0,"abc");
+	g_Renderer->DrawParticleClimate(0, 0, 0, 5, 1, 0, 0, 1, 0.5, 0, particleID1, bulletTime[0], 0.3);
 }
 
 float SceneMgr::getDelay()
